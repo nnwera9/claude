@@ -67,7 +67,7 @@ a { color: inherit; }
 .topbar { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; padding-bottom: 26px; }
 .topbar-left, .topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .date { font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-3); }
-.pill { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); padding: 5px 10px; border: 1px solid var(--line); border-radius: 100px; }
+.pill { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); padding: 5px 10px; border: 1px solid var(--line); border-radius: 100px; background: transparent; }
 #just-in-pill { cursor: pointer; color: var(--red); border-color: rgba(236,90,90,.34); background: rgba(236,90,90,.07); font-weight: 600; }
 #just-in-pill:hover { background: rgba(236,90,90,.13); }
 .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); flex-shrink: 0; }
@@ -124,7 +124,7 @@ a { color: inherit; }
 .tape-stale { position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 8.5px; letter-spacing: .18em; color: var(--ink-4); text-transform: uppercase; padding: 2px 0 2px 12px; background: var(--bg); }
 
 /* ── STICKY CONTROL DECK ─────────────────────────────────── */
-.deck { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); border-bottom: 1px solid var(--line); margin-top: 4px; }
+.deck { position: sticky; top: 0; z-index: 40; background: var(--bg); background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); border-bottom: 1px solid var(--line); margin-top: 4px; }
 .sources { display: flex; gap: 7px; overflow-x: auto; padding: 16px 0 14px; scrollbar-width: none; }
 .sources::-webkit-scrollbar { display: none; }
 .chip { flex-shrink: 0; display: inline-flex; align-items: center; gap: 9px; padding: 8px 14px 8px 9px; background: var(--surface); color: var(--ink); border: 1px solid var(--line-2); font-family: var(--sans); font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all .18s ease; white-space: nowrap; position: relative; border-radius: 100px; }
@@ -205,18 +205,22 @@ a { color: inherit; }
 .grid.compact .story-foot { display: none; }
 .readmin { font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; color: var(--ink-4); text-transform: uppercase; margin-left: auto; }
 .story.read .story-foot::after { content: 'Read'; font-family: var(--mono); font-size: 8.5px; letter-spacing: .2em; color: var(--ink-4); }
+.grid.compact .story.read::after { content: 'READ'; position: absolute; top: 16px; right: 16px; font-family: var(--mono); font-size: 8px; letter-spacing: .2em; color: var(--ink-4); }
 
 .sec-tag { display: inline-flex; padding: 2px 8px; font-family: var(--mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; border-radius: 100px; border: 1px solid var(--line-2); background: var(--hover); color: var(--ink-3); }
 .sec-tag.markets { color: var(--green); border-color: rgba(128,191,90,.3); background: rgba(128,191,90,.08); }
 .sec-tag.tech { color: #6fa8d6; border-color: rgba(111,168,214,.3); background: rgba(111,168,214,.08); }
 .sec-tag.politics { color: #c98352; border-color: rgba(201,131,82,.3); background: rgba(201,131,82,.08); }
 .sec-tag.world { color: #ad84bd; border-color: rgba(173,132,189,.3); background: rgba(173,132,189,.08); }
+[data-theme="light"] .sec-tag.tech { color: #2f6494; }
+[data-theme="light"] .sec-tag.politics { color: #9a5526; }
+[data-theme="light"] .sec-tag.world { color: #7a4f8c; }
 .sec-tag.business { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
 .sec-tag.opinion { color: var(--rust); border-color: rgba(198,106,63,.3); background: rgba(198,106,63,.08); }
 
-.story-actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 3px; opacity: 0; transform: translateY(-3px); transition: opacity .18s ease, transform .18s ease; z-index: 3; }
-.story:hover .story-actions, .story.kb-focus .story-actions { opacity: 1; transform: translateY(0); }
-.act { width: 29px; height: 29px; background: color-mix(in srgb, var(--surface) 85%, transparent); border: 1px solid var(--line-2); color: var(--ink-3); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .16s ease; border-radius: 8px; backdrop-filter: blur(6px); }
+.story-actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 3px; opacity: 0; transform: translateY(-3px); transition: opacity .18s ease, transform .18s ease; z-index: 3; pointer-events: none; }
+.story:hover .story-actions, .story.kb-focus .story-actions, .story-actions:focus-within { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.act { width: 29px; height: 29px; background: var(--surface); background: color-mix(in srgb, var(--surface) 85%, transparent); border: 1px solid var(--line-2); color: var(--ink-3); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .16s ease; border-radius: 8px; backdrop-filter: blur(6px); }
 .act:hover { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
 .act.saved { color: var(--accent); border-color: var(--accent-line); opacity: 1 !important; }
 .act svg { width: 14px; height: 14px; }
@@ -249,6 +253,7 @@ a { color: inherit; }
 
 /* cluster */
 .cluster { position: relative; background: linear-gradient(180deg, var(--surface-2), var(--surface)); border: 1px solid var(--line-2); border-radius: 16px; padding: 22px 24px 20px; animation: fadeUp .5s ease both; overflow: hidden; }
+.cluster.kb-focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-line); }
 .cluster::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, var(--accent), var(--rust)); }
 .cluster-top { display: flex; align-items: center; gap: 12px; margin-bottom: 13px; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); flex-wrap: wrap; }
 .cluster-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; background: var(--accent-soft); border: 1px solid var(--accent-line); border-radius: 100px; }
@@ -284,7 +289,8 @@ a { color: inherit; }
 .modal-title { font-family: var(--display); font-size: 30px; font-weight: 500; letter-spacing: -.02em; margin-bottom: 4px; }
 .modal-title em { font-family: var(--display); font-style: italic; color: var(--accent); }
 .modal-sub { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; color: var(--ink-4); text-transform: uppercase; margin-bottom: 24px; }
-.srow { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-top: 1px solid var(--line); font-size: 13.5px; gap: 12px; }
+.srow { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-top: 1px solid var(--line); font-size: 13.5px; gap: 12px; flex-wrap: wrap; }
+@media (max-width: 480px) { .modal { padding: 24px 18px; } }
 .srow:first-of-type { border-top: none; }
 .srow.clickable { cursor: pointer; }
 .srow.clickable:hover .srow-label { color: var(--accent); }
@@ -339,6 +345,8 @@ a { color: inherit; }
   .tape-label { display: none; }
   .tape-scroll { padding-left: 0; }
   .lead { padding: 24px 20px 26px; }
+  /* the full-width mobile player covers the bottom edge — hide Top under it */
+  body.player-open .to-top { opacity: 0 !important; pointer-events: none !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -357,10 +365,10 @@ a { color: inherit; }
         <span class="date" id="masthead-date"></span>
       </div>
       <div class="topbar-right">
-        <span class="pill" id="just-in-pill" style="display:none" title="Published in the last 30 minutes">
+        <button class="pill" id="just-in-pill" style="display:none" title="Published in the last 30 minutes">
           <span class="dot pulsing" style="background:var(--red);box-shadow:0 0 8px var(--red)"></span>
           <span id="just-in-label">0 JUST IN</span>
-        </span>
+        </button>
         <span class="pill" id="live-status" title="Source loading status">
           <span class="dot pulsing"></span>
           <span id="live-label">CONNECTING…</span>
@@ -492,11 +500,11 @@ a { color: inherit; }
   <div class="modal" role="dialog" aria-label="More actions">
     <h2 class="modal-title">More <em>actions</em></h2>
     <p class="modal-sub">Manage your reading</p>
-    <div class="srow clickable" id="action-mark-all"><span class="srow-label">Mark all visible as read</span><span class="key bare">→</span></div>
-    <div class="srow clickable" id="action-clear-read"><span class="srow-label">Clear read history</span><span class="key bare">→</span></div>
-    <div class="srow clickable" id="action-export-bookmarks"><span class="srow-label">Export bookmarks as Markdown</span><span class="key bare">→</span></div>
-    <div class="srow clickable" id="action-clear-bookmarks"><span class="srow-label">Clear all bookmarks</span><span class="key bare">→</span></div>
-    <div class="srow clickable" id="action-show-diag"><span class="srow-label">Show relay diagnostics</span><span class="key bare">→</span></div>
+    <div class="srow clickable" tabindex="0" role="button" id="action-mark-all"><span class="srow-label">Mark all visible as read</span><span class="key bare">→</span></div>
+    <div class="srow clickable" tabindex="0" role="button" id="action-clear-read"><span class="srow-label">Clear read history</span><span class="key bare">→</span></div>
+    <div class="srow clickable" tabindex="0" role="button" id="action-export-bookmarks"><span class="srow-label">Export bookmarks as Markdown</span><span class="key bare">→</span></div>
+    <div class="srow clickable" tabindex="0" role="button" id="action-clear-bookmarks"><span class="srow-label">Clear all bookmarks</span><span class="key bare">→</span></div>
+    <div class="srow clickable" tabindex="0" role="button" id="action-show-diag"><span class="srow-label">Show relay diagnostics</span><span class="key bare">→</span></div>
     <button class="modal-close" id="menu-close">Close</button>
   </div>
 </div>
@@ -518,7 +526,7 @@ a { color: inherit; }
   Top
 </button>
 
-<div class="toast-stack" id="toast-stack"></div>
+<div class="toast-stack" id="toast-stack" role="status" aria-live="polite"></div>
 
 <script>
 'use strict';
@@ -692,8 +700,17 @@ function timeAgo(d) {
   if (s < 86400 * 7) return Math.floor(s / 86400) + 'd ago';
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
-const _scratch = document.createElement('div');
-function stripHTML(h) { if (!h) return ''; _scratch.innerHTML = h; const t = (_scratch.textContent || '').replace(/\s+/g, ' ').trim(); _scratch.innerHTML = ''; return t; }
+// Untrusted feed HTML must never touch a live-document element: even on a
+// detached node, innerHTML creates <img> elements that fetch immediately and
+// run inline onerror handlers. DOMParser documents have no browsing context,
+// so nothing loads and nothing executes.
+const _domParser = new DOMParser();
+function stripHTML(h) {
+  if (!h) return '';
+  if (h.indexOf('<') === -1 && h.indexOf('&') === -1) return h.replace(/\s+/g, ' ').trim();
+  const doc = _domParser.parseFromString(h, 'text/html');
+  return (doc.body.textContent || '').replace(/\s+/g, ' ').trim();
+}
 function escapeHTML(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function todayMasthead() { return new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' }).toUpperCase(); }
 function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
@@ -734,7 +751,9 @@ function decodeGoogleNewsUrl(url) {
 // correctly when clicked, so they pass through untouched.
 function unwrapSyndicationUrl(url) {
   url = decodeGoogleNewsUrl(url);
-  try { const u = new URL(url); const real = u.searchParams.get('url'); if (real && /^https?:/.test(real)) return decodeURIComponent(real); } catch {}
+  // searchParams.get already percent-decodes — decoding again corrupts URLs
+  // that legitimately contain %2F / %26 escapes.
+  try { const u = new URL(url); const real = u.searchParams.get('url'); if (real && /^https?:/.test(real)) return real; } catch {}
   const m = url.match(/[?&]url=([^&]+)/);
   if (m) { try { const d = decodeURIComponent(m[1]); if (/^https?:/.test(d)) return d; } catch {} }
   return url;
@@ -755,10 +774,9 @@ function stripPublisherSuffix(title, source) {
 // ── FEED PARSING ──────────────────────────────────────────────────────────
 function firstImgFromHTML(html) {
   if (!html || html.indexOf('<') === -1) return '';
-  _scratch.innerHTML = html;
-  const img = _scratch.querySelector('img[src]');
+  const doc = _domParser.parseFromString(html, 'text/html');
+  const img = doc.querySelector('img[src]');
   const u = img ? img.getAttribute('src') : '';
-  _scratch.innerHTML = '';
   if (!u || !/^https?:/.test(u)) return '';
   if (/feedburner|doubleclick|pixel|\b1x1\b|\bspacer\b/i.test(u)) return '';
   return u;
@@ -1143,9 +1161,9 @@ async function loadAll(initial = false) {
   setTimeout(() => setTopProgress(0, false), 500);
 
   if (!initial) {
-    const ok = state.loadedSources.size;
+    const ok = [...state.loadedSources].filter(sourceEnabled).length;
     const newsBit = cycleNew > 0 ? ' · ' + cycleNew + ' new' : '';
-    toast(ok === srcs.length ? 'Refreshed' + newsBit : 'Refreshed · ' + ok + ' / ' + srcs.length + ' sources' + newsBit);
+    toast(ok >= srcs.length ? 'Refreshed' + newsBit : 'Refreshed · ' + ok + ' / ' + srcs.length + ' sources' + newsBit);
   }
 }
 
@@ -1264,7 +1282,8 @@ function maybeShowDiagnostic() {
   const vpnHint = RATE_LIMIT_HITS >= 2
     ? '<p><span class="gold">VPN note:</span> relay rate limits were hit this cycle (' + RATE_LIMIT_HITS + '× HTTP 429) — common on shared VPN exits. Rate-limited relays are benched automatically and retried; switching VPN server usually clears it faster.</p>'
     : '';
-  if (state.loadedSources.size === 0 && state.lastUpdate && !state.fromCache) {
+  const loadedCount = [...state.loadedSources].filter(sourceEnabled).length;
+  if (loadedCount === 0 && state.lastUpdate && !state.fromCache) {
     title.textContent = 'All sources failed to load';
     if (allBlocked) {
       const hosts = [...new Set(relayHosts())].slice(0, 4).map(h => '<code>' + escapeHTML(h) + '</code>').join(', ');
@@ -1274,20 +1293,20 @@ function maybeShowDiagnostic() {
     }
     banner.classList.add('show'); return;
   }
-  const failed = Object.keys(state.errors).length;
-  const truly = Object.keys(state.errors).filter(id => !state.staleSources.has(id));
-  if (failed > 0 && state.loadedSources.size > 0) {
+  const failedIds = Object.keys(state.errors).filter(sourceEnabled);
+  const truly = failedIds.filter(id => !state.staleSources.has(id));
+  if (failedIds.length > 0 && loadedCount > 0) {
     banner.classList.add('warn');
     if (truly.length > 0) {
       title.textContent = truly.length + ' source' + (truly.length === 1 ? '' : 's') + ' failed to load';
       body.innerHTML = '<p>' + escapeHTML(truly.map(id => SOURCE_MAP[id].name).join(', ')) + ' could not be loaded. Auto-retry in ~' + prefs.refreshMin + ' min, or press <code>R</code>.</p>' + vpnHint;
     } else {
-      title.textContent = 'Showing earlier articles for ' + failed + ' source' + (failed === 1 ? '' : 's');
-      body.innerHTML = '<p>' + escapeHTML(Object.keys(state.errors).map(id => SOURCE_MAP[id].name).join(', ')) + ' couldn’t refresh, but earlier articles are still showing.</p>' + vpnHint;
+      title.textContent = 'Showing earlier articles for ' + failedIds.length + ' source' + (failedIds.length === 1 ? '' : 's');
+      body.innerHTML = '<p>' + escapeHTML(failedIds.map(id => SOURCE_MAP[id].name).join(', ')) + ' couldn’t refresh, but earlier articles are still showing.</p>' + vpnHint;
     }
     banner.classList.add('show'); return;
   }
-  if (state.loadedSources.size === activeSources().length) banner.classList.remove('show');
+  if (loadedCount === activeSources().length) banner.classList.remove('show');
 }
 function showFullDiagnostic() {
   const banner = document.getElementById('notice'), title = document.getElementById('notice-title'), body = document.getElementById('notice-body');
@@ -1355,7 +1374,9 @@ function groupByTime(list) {
 function updateLiveStatus() {
   const dot = document.querySelector('#live-status .dot'), label = document.getElementById('live-label');
   if (!dot || !label) return;
-  const loaded = state.loadedSources.size, errored = Object.keys(state.errors).length, total = activeSources().length;
+  const loaded = [...state.loadedSources].filter(sourceEnabled).length,
+        errored = Object.keys(state.errors).filter(sourceEnabled).length,
+        total = activeSources().length;
   const busy = state.refreshing || state.loadingSources.size > 0;
   if (busy && state.fromCache) { dot.className = 'dot cached'; label.textContent = 'CACHED · UPDATING…'; }
   else if (busy) { dot.className = 'dot refreshing'; label.textContent = loaded === 0 ? 'CONNECTING…' : 'LOADING · ' + loaded + ' / ' + total; }
@@ -1472,11 +1493,9 @@ function renderFeed() {
   }
 
   const remaining = filtered.filter(a => !used.has(a.id));
-  let heroIdx = 0;
-  if (prefs.hideRead) { heroIdx = remaining.findIndex(a => !state.read.has(a.link)); if (heroIdx < 0) heroIdx = 0; }
   if (remaining.length > 0) {
-    const hero = remaining[heroIdx];
-    const rest = remaining.filter((_, i) => i !== heroIdx);
+    const hero = remaining[0];
+    const rest = remaining.slice(1);
     html += '<div class="row-head"><span class="row-label">★ Front Page</span><span class="row-rule"></span><span class="row-count">' + remaining.length + ' stories</span></div>';
     html += leadHTML(hero, ++kb);
     const groups = groupByTime(rest);
@@ -1518,7 +1537,7 @@ function leadHTML(a, kb) {
     + '<h2 class="lead-title">' + escapeHTML(a.title) + '</h2>'
     + (a.excerpt ? '<p class="lead-excerpt">' + escapeHTML(a.excerpt) + '</p>' : '')
     + '<span class="lead-cta">Read at ' + escapeHTML(src.name) + ' ' + ICON.arrow + '</span></div>'
-    + (hasMedia ? '<div class="lead-media"><img src="' + escapeHTML(a.image) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.style.display=\'none\'"></div>' : '')
+    + (hasMedia ? '<div class="lead-media"><img src="' + escapeHTML(a.image) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest(\'.lead\').classList.remove(\'has-media\');this.parentElement.style.display=\'none\'"></div>' : '')
     + '</div></a>';
 }
 
@@ -1552,6 +1571,8 @@ function attachArticleEvents() {
     el.addEventListener('auxclick', e => { if (e.button === 1) markReadByLink(el.dataset.link); });
   });
   document.querySelectorAll('.act').forEach(btn => {
+    // Middle-click on an action button must not open the parent link.
+    btn.addEventListener('auxclick', e => { e.preventDefault(); e.stopPropagation(); });
     btn.addEventListener('click', e => {
       e.preventDefault(); e.stopPropagation();
       const action = btn.dataset.action, link = btn.dataset.link;
@@ -1688,6 +1709,9 @@ document.getElementById('action-export-bookmarks').addEventListener('click', () 
 document.getElementById('action-clear-bookmarks').addEventListener('click', () => { const n = state.saved.size; if (n === 0) { toast('No bookmarks to clear'); return; } state.saved.clear(); persistSaved(); toast(n + ' bookmarks cleared'); renderAll(); menuModal.classList.remove('open'); });
 document.getElementById('action-show-diag').addEventListener('click', () => { showFullDiagnostic(); menuModal.classList.remove('open'); document.getElementById('notice').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 document.getElementById('just-in-pill').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+document.querySelectorAll('.srow.clickable').forEach(row => row.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); row.click(); }
+}));
 
 // ── SETTINGS ──────────────────────────────────────────────────────────────
 function renderSettings() {
@@ -1701,6 +1725,9 @@ function renderSettings() {
     if (sourceEnabled(id)) {
       if (activeSources().length === 1) { toast('Keep at least one source on'); return; }
       prefs.disabledSources.push(id);
+      // Purge status bookkeeping so the disabled source can't skew the
+      // LIVE/PARTIAL counts or pin the failure banner.
+      state.loadedSources.delete(id); state.staleSources.delete(id); state.loadingSources.delete(id); delete state.errors[id];
       if (prefs.activeFilter === id) prefs.activeFilter = 'all';
     } else {
       prefs.disabledSources = prefs.disabledSources.filter(x => x !== id);
@@ -1750,8 +1777,8 @@ function setChannel(id, autoplay) {
   const src = 'https://www.youtube.com/embed/live_stream?channel=' + ch.id + '&autoplay=' + (autoplay ? 1 : 0) + '&rel=0';
   if (playerLoadedChannel !== ch.id || playerIframe.src === 'about:blank') { playerIframe.src = src; playerLoadedChannel = ch.id; }
 }
-function openPlayer(autoplay) { livePlayer.classList.remove('closed', 'minimized'); liveReopen.classList.remove('show'); prefs.playerClosed = false; persistPrefs(); setChannel(prefs.liveChannel, autoplay); }
-function closePlayer() { livePlayer.classList.add('closed'); liveReopen.classList.add('show'); prefs.playerClosed = true; persistPrefs(); playerIframe.src = 'about:blank'; playerLoadedChannel = null; }
+function openPlayer(autoplay) { livePlayer.classList.remove('closed', 'minimized'); liveReopen.classList.remove('show'); document.body.classList.add('player-open'); prefs.playerClosed = false; persistPrefs(); setChannel(prefs.liveChannel, autoplay); }
+function closePlayer() { livePlayer.classList.add('closed'); liveReopen.classList.add('show'); document.body.classList.remove('player-open'); prefs.playerClosed = true; persistPrefs(); playerIframe.src = 'about:blank'; playerLoadedChannel = null; }
 playerMin.addEventListener('click', () => {
   livePlayer.classList.toggle('minimized');
   const m = livePlayer.classList.contains('minimized');
@@ -1795,8 +1822,12 @@ document.addEventListener('keydown', e => {
   if (inField) return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   const k = e.key;
+  if (k === '?' || (e.shiftKey && k === '/')) { shortcutsModal.classList.toggle('open'); return; }
+  // While a modal is open, the rest of the shortcuts shouldn't fire underneath it.
+  if (shortcutsModal.classList.contains('open') || menuModal.classList.contains('open') || settingsModal.classList.contains('open')) return;
+  // Enter on a focused link/button must activate that element, not the J/K cursor.
+  if (k === 'Enter' && document.activeElement && document.activeElement.closest('a,button,[role="button"]')) return;
   if (k === '/') { e.preventDefault(); openSearch(); }
-  else if (k === '?' || (e.shiftKey && k === '/')) shortcutsModal.classList.toggle('open');
   else if (k === 'r' || k === 'R') loadAll(false);
   else if (k === 't' || k === 'T') applyTheme(prefs.theme === 'light' ? 'dark' : 'light', true);
   else if (k === 'a' || k === 'A') { prefs.activeFilter = 'all'; persistPrefs(); state.kbIndex = -1; renderAll(); }
