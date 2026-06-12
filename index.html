@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark light">
 <title>The Newsstand</title>
+<meta name="description" content="Nine newsrooms, one front page — a personal live news reader.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📰</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -219,6 +221,32 @@ a { color: inherit; }
 .act.saved { color: var(--accent); border-color: var(--accent-line); opacity: 1 !important; }
 .act svg { width: 14px; height: 14px; }
 
+/* article media */
+.story-media { margin: -20px -20px 16px; aspect-ratio: 16/9; overflow: hidden; background: var(--surface-3); }
+.story-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
+.story:hover .story-media img { transform: scale(1.045); }
+.grid.compact .story-media { display: none; }
+.lead-grid { display: grid; grid-template-columns: 1fr; gap: 28px; align-items: center; }
+.lead.has-media .lead-grid { grid-template-columns: 1.45fr 1fr; }
+.lead-media { border-radius: 12px; overflow: hidden; aspect-ratio: 16/10; background: var(--surface-3); }
+.lead-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+.lead:hover .lead-media img { transform: scale(1.035); }
+@media (max-width: 860px) { .lead.has-media .lead-grid { grid-template-columns: 1fr; } .lead-media { order: -1; aspect-ratio: 16/9; } }
+
+/* new-since-last-visit marker */
+.new-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 7px var(--accent); flex-shrink: 0; }
+
+/* toggle switch (settings) */
+.switch { position: relative; width: 38px; height: 21px; border-radius: 100px; background: var(--hover-2); border: 1px solid var(--line-2); cursor: pointer; transition: all .2s ease; flex-shrink: 0; padding: 0; }
+.switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 15px; height: 15px; border-radius: 50%; background: var(--ink-3); transition: all .2s ease; }
+.switch.on { background: var(--accent); border-color: var(--accent); }
+.switch.on::after { left: 19px; background: var(--accent-ink); }
+
+/* back to top */
+.to-top { position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 90px); background: var(--surface-2); border: 1px solid var(--line-2); color: var(--ink); padding: 10px 18px; border-radius: 100px; font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; z-index: 55; box-shadow: var(--shadow); opacity: 0; pointer-events: none; transition: transform .3s ease, opacity .3s ease; }
+.to-top.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+.to-top svg { width: 12px; height: 12px; }
+
 /* cluster */
 .cluster { position: relative; background: linear-gradient(180deg, var(--surface-2), var(--surface)); border: 1px solid var(--line-2); border-radius: 16px; padding: 22px 24px 20px; animation: fadeUp .5s ease both; overflow: hidden; }
 .cluster::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, var(--accent), var(--rust)); }
@@ -352,6 +380,9 @@ a { color: inherit; }
         <button class="btn icon" id="live-btn" title="Live TV (V)" aria-label="Toggle live TV">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="m17 2-5 5-5-5"/></svg>
         </button>
+        <button class="btn icon" id="settings-btn" title="Settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
         <button class="btn icon" id="menu-btn" title="More actions" aria-label="More actions">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
         </button>
@@ -359,7 +390,7 @@ a { color: inherit; }
     </div>
     <div class="brand">
       <h1 class="wordmark">The <em>Newsstand</em></h1>
-      <p class="tagline">Seven newsrooms, one front page — pulled live from each wire and refreshed every few minutes.</p>
+      <p class="tagline">Nine newsrooms, one front page — pulled live from each wire and refreshed every few minutes.</p>
     </div>
     <div class="notice" id="notice" role="status">
       <button class="dismiss" id="notice-dismiss" title="Dismiss" aria-label="Dismiss notice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="13" height="13"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
@@ -470,23 +501,49 @@ a { color: inherit; }
   </div>
 </div>
 
+<!-- SETTINGS MODAL -->
+<div class="modal-backdrop" id="settings-modal">
+  <div class="modal" role="dialog" aria-label="Reader settings">
+    <h2 class="modal-title">Reader <em>settings</em></h2>
+    <p class="modal-sub">Sources · images · refresh cadence</p>
+    <div id="settings-sources"></div>
+    <div class="srow"><span class="srow-label">Show article images</span><button class="switch" id="set-images" role="switch" aria-label="Toggle article images"></button></div>
+    <div class="srow"><span class="srow-label">Auto-refresh every</span><span class="seg" id="refresh-seg"><button data-min="3">3m</button><button data-min="5">5m</button><button data-min="10">10m</button><button data-min="15">15m</button></span></div>
+    <button class="modal-close" id="settings-close">Close</button>
+  </div>
+</div>
+
+<button class="to-top" id="to-top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+  Top
+</button>
+
 <div class="toast-stack" id="toast-stack"></div>
 
 <script>
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════════════════
-//   THE NEWSSTAND — v11
+//   THE NEWSSTAND — v12
 //
-//   Fetch engine rebuilt for reliability + speed:
-//   • Each source pulls its OWN feeds AND a Google News backup in parallel,
-//     then merges + de-dupes — premium publishers (FT/WSJ/Bloomberg) that
-//     block proxy IPs now always have a working path, and coverage is wider.
-//   • Hedged relay racing: instead of waiting out a 9s timeout per proxy, a
-//     second proxy is launched after 2.4s and the first valid reply wins.
-//     Slow/blocked relays no longer stall a feed.
-//   • Direct-link preference: when the same story arrives via a publisher feed
-//     (clean URL) and Google News (redirect), the clean URL is kept.
+//   v11 → v12 (VPN hardening + features):
+//   • Rate-limit aware relays: an HTTP 429 benches that relay for 90s — on
+//     shared VPN exit IPs the race stops feeding an exhausted relay. Feed
+//     fetches are staggered and capped at 6 concurrent for the same reason.
+//   • Google News /rss/articles/ tokens are base64-decoded client-side where
+//     possible, so clicks land directly on the publisher (and dodge Google's
+//     consent interstitial on VPN exits).
+//   • Article images parsed from media:content / media:thumbnail / enclosure
+//     / inline <img>; second feed-converter relay (feed2json) added.
+//   • New sources: BBC News and AP News (neither blocks proxy IPs).
+//   • Settings: per-source toggles, image toggle, refresh cadence.
+//   • Share (Web Share API w/ copy fallback), back-to-top, "new since last
+//     visit" markers, richer relay diagnostics incl. cooldowns + last errors.
+//
+//   Carry-over from v11:
+//   • Publisher feeds AND aggregator backups fetched in parallel + merged.
+//   • Hedged relay racing — first valid reply wins, losers aborted.
+//   • Direct-link preference over aggregator redirects on merge.
 //   • Clicking an article opens it at the source — no interstitial.
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -495,20 +552,28 @@ a { color: inherit; }
 // (contents may be a base64 data: URI) · 'rss2json' = feed→JSON converter.
 const PROXIES = [
   { name: 'rss2json',       kind: 'rss2json',   feedsOnly: true, build: u => 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(u) },
+  { name: 'feed2json',      kind: 'feed2json',  feedsOnly: true, build: u => 'https://feed2json.org/convert?url=' + encodeURIComponent(u) },
   { name: 'allorigins-raw', kind: 'text',       build: u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u) + '&_t=' + Date.now() },
   { name: 'codetabs',       kind: 'text',       build: u => 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u) },
   { name: 'allorigins',     kind: 'allorigins', build: u => 'https://api.allorigins.win/get?url=' + encodeURIComponent(u) + '&_t=' + Date.now() },
   { name: 'corsproxy',      kind: 'text',       build: u => 'https://corsproxy.io/?url=' + encodeURIComponent(u) },
-  { name: 'thingproxy',     kind: 'text',       build: u => 'https://thingproxy.freeboard.io/fetch/' + u },
+  { name: 'cors-lol',       kind: 'text',       build: u => 'https://api.cors.lol/?url=' + encodeURIComponent(u) },
   { name: 'cf-demo',        kind: 'text',       build: u => 'https://test.cors.workers.dev/?' + u },
   { name: 'x2u',            kind: 'text',       build: u => 'https://cors.x2u.in/' + u },
 ];
 const PROXY_HEALTH = Object.fromEntries(PROXIES.map(p => [p.name, { ok: 0, fail: 0 }]));
 const PROXY_INFLIGHT = Object.fromEntries(PROXIES.map(p => [p.name, 0]));
+// Rate-limit awareness: a relay answering HTTP 429 sits out for a while.
+// Shared VPN exit IPs exhaust per-IP limits quickly, so this keeps the race
+// from hammering an already-limited relay.
+const PROXY_COOLDOWN = Object.fromEntries(PROXIES.map(p => [p.name, 0]));
+const PROXY_LAST_ERR = Object.fromEntries(PROXIES.map(p => [p.name, '']));
+const COOLDOWN_MS = 90 * 1000;
+let RATE_LIMIT_HITS = 0;         // 429s seen this load cycle (VPN signal)
 const FETCH_TIMEOUT_MS = 8000;   // hard backstop per relay attempt
-const HEDGE_MS = 2400;           // launch the next relay if this one is slow
+const HEDGE_MS = 2200;           // launch the next relay if this one is slow
 const MAX_HEDGE = 2;             // max concurrent relay attempts per feed
-const FEED_CONCURRENCY = 8;      // max feed URLs fetched at once
+const FEED_CONCURRENCY = 6;      // max feed URLs fetched at once (gentle on shared IPs)
 
 // ── SOURCES ───────────────────────────────────────────────────────────────
 // feeds: publisher's own RSS (clean links, full excerpts).
@@ -518,36 +583,43 @@ const GN = q => 'https://news.google.com/rss/search?q=' + encodeURIComponent(q).
 const SOURCES = [
   { id: 'ft', name: 'Financial Times', mark: 'FT', accent: '#c0395a', freshDays: 3,
     aliases: ['Financial Times', 'FT.com', 'FT'],
-    feeds: ['https://www.ft.com/rss/home', 'https://www.ft.com/world?format=rss', 'https://www.ft.com/companies?format=rss', 'https://www.ft.com/markets?format=rss', 'https://www.ft.com/technology?format=rss'],
+    feeds: ['https://www.ft.com/rss/home', 'https://www.ft.com/world?format=rss', 'https://www.ft.com/markets?format=rss', 'https://www.ft.com/technology?format=rss'],
     backup: [GN('site:ft.com when:2d')] },
   { id: 'wsj', name: 'Wall Street Journal', mark: 'WSJ', accent: '#3f72aa', freshDays: 3,
     aliases: ['The Wall Street Journal', 'Wall Street Journal', 'WSJ.com', 'WSJ'],
-    feeds: ['https://feeds.a.dj.com/rss/RSSWorldNews.xml', 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml', 'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml', 'https://feeds.a.dj.com/rss/RSSWSJD.xml', 'https://feeds.a.dj.com/rss/RSSOpinion.xml'],
+    feeds: ['https://feeds.a.dj.com/rss/RSSWorldNews.xml', 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml', 'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml', 'https://feeds.a.dj.com/rss/RSSWSJD.xml'],
     backup: [GN('site:wsj.com when:2d'), GN('site:wsj.com when:10h')] },
   { id: 'nyt', name: 'New York Times', mark: 'NYT', accent: '#9a9a92', freshDays: 3,
     aliases: ['The New York Times', 'New York Times', 'NYT', 'nytimes.com'],
-    feeds: ['https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml', 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml', 'https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml', 'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml', 'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml'],
+    feeds: ['https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml', 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml', 'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml', 'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml'],
     backup: [GN('site:nytimes.com when:1d')] },
   { id: 'bloomberg', name: 'Bloomberg', mark: 'B', accent: '#e06c2b', freshDays: 3,
     aliases: ['Bloomberg.com', 'Bloomberg Law', 'Bloomberg'],
     feeds: ['https://feeds.bloomberg.com/markets/news.rss', 'https://feeds.bloomberg.com/technology/news.rss', 'https://feeds.bloomberg.com/politics/news.rss', 'https://feeds.bloomberg.com/economics/news.rss'],
     backup: [GN('site:bloomberg.com when:2d'), GN('site:bloomberg.com when:10h')] },
-  { id: 'economist', name: 'The Economist', mark: 'E', accent: '#cf3a30', freshDays: 9,
-    aliases: ['The Economist'],
-    feeds: ['https://www.economist.com/latest/rss.xml', 'https://www.economist.com/finance-and-economics/rss.xml', 'https://www.economist.com/business/rss.xml', 'https://www.economist.com/international/rss.xml', 'https://www.economist.com/science-and-technology/rss.xml'],
-    backup: [GN('site:economist.com when:7d')] },
-  { id: 'newyorker', name: 'The New Yorker', mark: 'NY', accent: '#4a7f93', freshDays: 9,
-    aliases: ['The New Yorker'],
-    feeds: ['https://www.newyorker.com/feed/everything', 'https://www.newyorker.com/feed/news', 'https://www.newyorker.com/feed/culture'],
-    backup: [GN('site:newyorker.com when:7d')] },
   { id: 'reuters', name: 'Reuters', mark: 'R', accent: '#e88a3a', freshDays: 2,
     aliases: ['Reuters.com', 'Reuters'],
     feeds: [GN('site:reuters.com when:8h'), GN('site:reuters.com when:1d')],
     backup: ['https://www.bing.com/news/search?q=site%3Areuters.com&qft=sortbydate%3D%221%22&format=rss', GN('site:reuters.com when:2d')] },
+  { id: 'bbc', name: 'BBC News', mark: 'BBC', accent: '#a91d2a', freshDays: 2,
+    aliases: ['BBC News', 'BBC.com', 'BBC'],
+    feeds: ['https://feeds.bbci.co.uk/news/rss.xml', 'https://feeds.bbci.co.uk/news/world/rss.xml', 'https://feeds.bbci.co.uk/news/business/rss.xml'],
+    backup: [GN('site:bbc.com when:1d')] },
+  { id: 'ap', name: 'AP News', mark: 'AP', accent: '#3e6db5', freshDays: 2,
+    aliases: ['AP News', 'Associated Press', 'The Associated Press'],
+    feeds: [GN('site:apnews.com when:8h'), GN('site:apnews.com when:1d')],
+    backup: ['https://www.bing.com/news/search?q=site%3Aapnews.com&qft=sortbydate%3D%221%22&format=rss'] },
+  { id: 'economist', name: 'The Economist', mark: 'E', accent: '#cf3a30', freshDays: 9,
+    aliases: ['The Economist'],
+    feeds: ['https://www.economist.com/latest/rss.xml', 'https://www.economist.com/finance-and-economics/rss.xml', 'https://www.economist.com/business/rss.xml'],
+    backup: [GN('site:economist.com when:7d')] },
+  { id: 'newyorker', name: 'The New Yorker', mark: 'NY', accent: '#4a7f93', freshDays: 9,
+    aliases: ['The New Yorker'],
+    feeds: ['https://www.newyorker.com/feed/everything', 'https://www.newyorker.com/feed/news'],
+    backup: [GN('site:newyorker.com when:7d')] },
 ];
 const SOURCE_MAP = Object.fromEntries(SOURCES.map(s => [s.id, s]));
-const REFRESH_MS = 5 * 60 * 1000;
-const PER_SOURCE_CAP = 55;
+const PER_SOURCE_CAP = 60;
 
 // ── OFFICIAL LIVE CHANNELS (YouTube channel-level live embeds) ────────────
 const LIVE_CHANNELS = [
@@ -577,7 +649,8 @@ const TAPE_SYMBOLS = [
 // ── STORAGE / STATE ─────────────────────────────────────────────────────────
 const STORAGE_READ = 'newsstand:read', STORAGE_SAVED = 'newsstand:saved',
       STORAGE_PREFS = 'newsstand:prefs', STORAGE_CACHE = 'newsstand:cache',
-      STORAGE_TAPE = 'newsstand:tape', STORAGE_RELAYS = 'newsstand:relays';
+      STORAGE_TAPE = 'newsstand:tape', STORAGE_RELAYS = 'newsstand:relays',
+      STORAGE_VISIT = 'newsstand:lastvisit';
 
 function loadJSON(k, fb) { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? fb; } catch { return fb; } }
 function persist(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
@@ -586,7 +659,12 @@ const prefs = Object.assign({
   sort: 'newest', density: 'comfortable', hideRead: false,
   activeFilter: 'all', activeTopic: 'all', clusterEnabled: true,
   theme: 'dark', liveChannel: LIVE_CHANNELS[0].id, playerClosed: true,
+  showImages: true, refreshMin: 5, disabledSources: [],
 }, loadJSON(STORAGE_PREFS, {}));
+if (!Array.isArray(prefs.disabledSources)) prefs.disabledSources = [];
+
+function sourceEnabled(id) { return !prefs.disabledSources.includes(id); }
+function activeSources() { return SOURCES.filter(s => sourceEnabled(s.id)); }
 
 const state = {
   articles: [], errors: {},
@@ -594,7 +672,11 @@ const state = {
   refreshing: false, lastUpdate: null, query: '', fromCache: false,
   read: new Set(loadJSON(STORAGE_READ, [])), saved: new Set(loadJSON(STORAGE_SAVED, [])),
   kbIndex: -1, tape: null, tapeAt: 0,
+  newSince: 0,
 };
+// "New since your last visit" watermark — read before this session stamps it.
+state.newSince = loadJSON(STORAGE_VISIT, Date.now());
+persist(STORAGE_VISIT, Date.now());
 
 function persistRead()  { persist(STORAGE_READ, [...state.read].slice(-1500)); }
 function persistSaved() { persist(STORAGE_SAVED, [...state.saved]); }
@@ -627,10 +709,31 @@ function canonicalUrl(url) {
   } catch { return String(url).toLowerCase(); }
 }
 
+// Google News /rss/articles/<token> links: older tokens are base64-encoded
+// protobuf with the destination URL embedded in printable bytes — decode it
+// so clicks land directly on the publisher (also dodges Google's consent
+// interstitial on VPN exits). Newer AU_yqL tokens aren't decodable
+// client-side; those pass through and redirect normally.
+function decodeGoogleNewsUrl(url) {
+  try {
+    const u = new URL(url);
+    if (!/(^|\.)news\.google\.com$/.test(u.host)) return url;
+    const m = u.pathname.match(/\/(?:articles|read)\/([A-Za-z0-9_-]+)/);
+    if (!m) return url;
+    let b64 = m[1].replace(/-/g, '+').replace(/_/g, '/');
+    while (b64.length % 4) b64 += '=';
+    const bin = atob(b64);
+    const found = bin.match(/https?:\/\/[\x21-\x7e]+/);
+    if (found && /^https?:\/\/[^/]+\.[a-z]/i.test(found[0])) return found[0];
+  } catch {}
+  return url;
+}
+
 // Unwrap aggregator redirect links (Bing apiclick / older Google formats carry
-// the real article in a url= param). Modern Google /rss/articles/ links are
-// opaque but redirect correctly when clicked, so they pass through untouched.
+// the real article in a url= param). Remaining opaque Google links redirect
+// correctly when clicked, so they pass through untouched.
 function unwrapSyndicationUrl(url) {
+  url = decodeGoogleNewsUrl(url);
   try { const u = new URL(url); const real = u.searchParams.get('url'); if (real && /^https?:/.test(real)) return decodeURIComponent(real); } catch {}
   const m = url.match(/[?&]url=([^&]+)/);
   if (m) { try { const d = decodeURIComponent(m[1]); if (/^https?:/.test(d)) return d; } catch {} }
@@ -650,6 +753,31 @@ function stripPublisherSuffix(title, source) {
 }
 
 // ── FEED PARSING ──────────────────────────────────────────────────────────
+function firstImgFromHTML(html) {
+  if (!html || html.indexOf('<') === -1) return '';
+  _scratch.innerHTML = html;
+  const img = _scratch.querySelector('img[src]');
+  const u = img ? img.getAttribute('src') : '';
+  _scratch.innerHTML = '';
+  if (!u || !/^https?:/.test(u)) return '';
+  if (/feedburner|doubleclick|pixel|\b1x1\b|\bspacer\b/i.test(u)) return '';
+  return u;
+}
+function elAttrUrl(el, names) { for (const a of names) { const v = el.getAttribute(a); if (v && /^https?:/.test(v.trim())) return v.trim(); } return ''; }
+function itemImage(n, descHTML) {
+  for (const el of n.getElementsByTagName('media:thumbnail')) { const u = elAttrUrl(el, ['url', 'src']); if (u) return u; }
+  for (const el of n.getElementsByTagName('media:content')) {
+    const t = (el.getAttribute('type') || '') + ' ' + (el.getAttribute('medium') || '');
+    const u = elAttrUrl(el, ['url', 'src']);
+    if (u && (/image/i.test(t) || /\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(u))) return u;
+  }
+  for (const el of n.getElementsByTagName('enclosure')) {
+    const u = elAttrUrl(el, ['url']);
+    if (u && /image/i.test(el.getAttribute('type') || '')) return u;
+  }
+  return firstImgFromHTML(descHTML);
+}
+
 function parseXML(xml) {
   if (!xml || xml.length < 30) return [];
   const parser = new DOMParser();
@@ -674,12 +802,14 @@ function parseXML(xml) {
       link = unwrapSyndicationUrl(link.trim());
       let dEl = n.querySelector('description, summary, content');
       if (!dEl) dEl = n.getElementsByTagName('content:encoded')[0] || null;
-      const excerpt = dEl ? stripHTML(dEl.textContent).slice(0, 300) : '';
+      const descRaw = dEl ? dEl.textContent : '';
+      const image = itemImage(n, descRaw);
+      const excerpt = stripHTML(descRaw).slice(0, 300);
       const dateEl = n.querySelector('pubDate, published, updated, date');
       let pub = dateEl ? new Date(dateEl.textContent.trim()) : new Date();
       if (isNaN(pub.getTime())) pub = new Date();
       if (pub.getTime() > Date.now() + 36e5) pub = new Date();
-      out.push({ title, link, excerpt, pubDate: pub });
+      out.push({ title, link, excerpt, pubDate: pub, image });
     } catch {}
   }
   return out;
@@ -711,9 +841,37 @@ function rss2jsonItems(data) {
       let pub = raw ? new Date(raw) : new Date();
       if (isNaN(pub.getTime())) pub = new Date();
       if (pub.getTime() > Date.now() + 36e5) pub = new Date();
-      out.push({ title, link, excerpt, pubDate: pub });
+      const enc = it.enclosure || {};
+      const image = (typeof it.thumbnail === 'string' && /^https?:/.test(it.thumbnail) && it.thumbnail)
+        || (/image/i.test(enc.type || '') && /^https?:/.test(enc.link || '') && enc.link)
+        || firstImgFromHTML(it.content || it.description || '') || '';
+      out.push({ title, link, excerpt, pubDate: pub, image });
     } catch {}
   }
+  return out;
+}
+
+// Shape feed2json (JSON Feed spec) items into the same shape parseXML emits.
+function feed2jsonItems(data) {
+  if (!data || !Array.isArray(data.items)) throw new Error('feed2json error');
+  const out = [];
+  for (const it of data.items) {
+    try {
+      const title = stripHTML(it.title || '');
+      let link = (it.url || it.external_url || '').trim();
+      if (!title || !link) continue;
+      link = unwrapSyndicationUrl(link);
+      const excerpt = stripHTML(it.summary || it.content_text || it.content_html || '').slice(0, 300);
+      let pub = it.date_published ? new Date(it.date_published) : new Date();
+      if (isNaN(pub.getTime())) pub = new Date();
+      if (pub.getTime() > Date.now() + 36e5) pub = new Date();
+      const image = (typeof it.image === 'string' && /^https?:/.test(it.image) && it.image)
+        || (typeof it.banner_image === 'string' && /^https?:/.test(it.banner_image) && it.banner_image)
+        || firstImgFromHTML(it.content_html || '') || '';
+      out.push({ title, link, excerpt, pubDate: pub, image });
+    } catch {}
+  }
+  if (!out.length) throw new Error('no items');
   return out;
 }
 
@@ -736,14 +894,22 @@ function rememberRelay(url, name) { relayMemory[feedHost(url)] = name; persist(S
 function forgetRelay(url, name) { if (relayMemory[feedHost(url)] === name) { delete relayMemory[feedHost(url)]; persist(STORAGE_RELAYS, relayMemory); } }
 
 function rankedProxies(url, expect) {
-  const pool = PROXIES.filter(p => expect === 'feed' || !p.feedsOnly);
+  let pool = PROXIES.filter(p => expect === 'feed' || !p.feedsOnly);
+  // Rate-limited relays sit at the back of the queue (still reachable as a
+  // last resort) until their cooldown expires.
+  const now = Date.now();
+  const hot = pool.filter(p => PROXY_COOLDOWN[p.name] <= now);
+  const cooling = pool.filter(p => PROXY_COOLDOWN[p.name] > now);
   const score = p => {
     const h = PROXY_HEALTH[p.name];
     return ((h.ok + 1) / (h.ok + h.fail + 2)) / (1 + PROXY_INFLIGHT[p.name]);
   };
-  const sorted = [...pool].sort((a, b) => score(b) - score(a));
+  const sorted = [...hot].sort((a, b) => score(b) - score(a)).concat(cooling.sort((a, b) => PROXY_COOLDOWN[a.name] - PROXY_COOLDOWN[b.name]));
   const winner = relayMemory[feedHost(url)];
-  if (winner) { const i = sorted.findIndex(p => p.name === winner); if (i > 0) sorted.unshift(sorted.splice(i, 1)[0]); }
+  if (winner && PROXY_COOLDOWN[winner] <= now) {
+    const i = sorted.findIndex(p => p.name === winner);
+    if (i > 0) sorted.unshift(sorted.splice(i, 1)[0]);
+  }
   return sorted;
 }
 
@@ -771,9 +937,14 @@ async function attemptProxy(proxy, url, expect, signal) {
   const tid = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
   try {
     const r = await fetch(proxy.build(url), { signal: ctrl.signal, cache: 'no-store' });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    if (proxy.kind === 'rss2json') {
-      const items = rss2jsonItems(await r.json());
+    if (!r.ok) {
+      // 429 from the relay itself = per-IP rate limit (typical on shared VPN
+      // exits). Bench this relay briefly so the race stops feeding it.
+      if (r.status === 429) { PROXY_COOLDOWN[proxy.name] = Date.now() + COOLDOWN_MS; RATE_LIMIT_HITS++; }
+      throw new Error('HTTP ' + r.status);
+    }
+    if (proxy.kind === 'rss2json' || proxy.kind === 'feed2json') {
+      const items = proxy.kind === 'rss2json' ? rss2jsonItems(await r.json()) : feed2jsonItems(await r.json());
       if (!items.length) throw new Error('no items');
       return items;
     }
@@ -816,7 +987,7 @@ function fetchViaRelays(url, expect) {
           finished = true; cleanup(); resolve(v);
         })
         .catch(e => {
-          if (!ctrl.signal.aborted) { PROXY_HEALTH[proxy.name].fail++; forgetRelay(url, proxy.name); lastErr = e; }
+          if (!ctrl.signal.aborted) { PROXY_HEALTH[proxy.name].fail++; PROXY_LAST_ERR[proxy.name] = (e && e.message || 'failed').slice(0, 60); forgetRelay(url, proxy.name); lastErr = e; }
           if (!finished) launch();
         })
         .finally(() => { active--; PROXY_INFLIGHT[proxy.name]--; ctrls.delete(ctrl); armHedge(); checkDone(); });
@@ -834,7 +1005,7 @@ function mergeFeedResults(source, settled, seenUrl, seenTitle) {
     okCount++;
     for (const raw of r.value) {
       if (!raw.link) continue;
-      const it = { title: stripPublisherSuffix(raw.title, source), link: raw.link, excerpt: raw.excerpt, pubDate: raw.pubDate };
+      const it = { title: stripPublisherSuffix(raw.title, source), link: raw.link, excerpt: raw.excerpt, pubDate: raw.pubDate, image: raw.image || '' };
       if (!it.title) continue;
       const tKey = normTitle(it.title);
       const uKey = canonicalUrl(it.link);
@@ -842,6 +1013,7 @@ function mergeFeedResults(source, settled, seenUrl, seenTitle) {
         const ex = seenUrl.get(uKey);
         if (it.pubDate > ex.pubDate) ex.pubDate = it.pubDate;
         if ((!ex.excerpt || ex.excerpt.length < (it.excerpt || '').length) && it.excerpt) ex.excerpt = it.excerpt;
+        if (!ex.image && it.image) ex.image = it.image;
         continue;
       }
       if (seenTitle.has(tKey)) {
@@ -853,6 +1025,7 @@ function mergeFeedResults(source, settled, seenUrl, seenTitle) {
           seenUrl.set(uKey, ex);
         }
         if ((!ex.excerpt || ex.excerpt.length < (it.excerpt || '').length) && it.excerpt) ex.excerpt = it.excerpt;
+        if (!ex.image && it.image) ex.image = it.image;
         if (it.pubDate > ex.pubDate) ex.pubDate = it.pubDate;
         continue;
       }
@@ -863,7 +1036,7 @@ function mergeFeedResults(source, settled, seenUrl, seenTitle) {
 }
 
 function buildArticle(source, it) {
-  const a = { id: source.id + '|' + canonicalUrl(it.link), sourceId: source.id, title: it.title, excerpt: it.excerpt, link: it.link, pubDate: it.pubDate };
+  const a = { id: source.id + '|' + canonicalUrl(it.link), sourceId: source.id, title: it.title, excerpt: it.excerpt, link: it.link, pubDate: it.pubDate, image: it.image || '' };
   a.section = classifySection(a);
   a.readMin = readingTimeMinutes(a);
   return a;
@@ -925,16 +1098,21 @@ function setTopProgress(frac, visible) {
   el.style.setProperty('--po', visible ? 1 : 0);
 }
 async function loadAll(initial = false) {
+  const srcs = activeSources();
   if (initial && !state.fromCache) state.articles = [];
   if (initial) { state.errors = {}; state.loadedSources = new Set(); }
   state.refreshing = !initial;
-  state.loadingSources = new Set(SOURCES.map(s => s.id));
+  state.loadingSources = new Set(srcs.map(s => s.id));
+  RATE_LIMIT_HITS = 0;
   let done = 0;
   setTopProgress(0.06, true);
   renderAll();
 
   let cycleNew = 0;
-  await Promise.all(SOURCES.map(async (source) => {
+  await Promise.all(srcs.map(async (source, idx) => {
+    // Light stagger smooths the burst across relays — kinder to per-IP rate
+    // limits on shared VPN exits.
+    await new Promise(r => setTimeout(r, idx * 140));
     try {
       const items = await fetchSourceWithRetry(source);
       const prevLinks = new Set(state.articles.filter(a => a.sourceId === source.id).map(a => a.link));
@@ -950,7 +1128,7 @@ async function loadAll(initial = false) {
       if (state.articles.some(a => a.sourceId === source.id)) { state.loadedSources.add(source.id); state.staleSources.add(source.id); }
     } finally {
       state.loadingSources.delete(source.id);
-      done++; setTopProgress(0.06 + 0.94 * (done / SOURCES.length), true);
+      done++; setTopProgress(0.06 + 0.94 * (done / srcs.length), true);
       scheduleRender();
     }
   }));
@@ -967,7 +1145,7 @@ async function loadAll(initial = false) {
   if (!initial) {
     const ok = state.loadedSources.size;
     const newsBit = cycleNew > 0 ? ' · ' + cycleNew + ' new' : '';
-    toast(ok === SOURCES.length ? 'Refreshed' + newsBit : 'Refreshed · ' + ok + ' / ' + SOURCES.length + ' sources' + newsBit);
+    toast(ok === srcs.length ? 'Refreshed' + newsBit : 'Refreshed · ' + ok + ' / ' + srcs.length + ' sources' + newsBit);
   }
 }
 
@@ -1036,7 +1214,7 @@ function renderTape() {
 const SECTION_RULES = [
   { id: 'opinion', name: 'Opinion', match: /\b(opinion|editorial|commentary|op-?ed|column|columnist|essay)\b/i, urlMatch: /\/(opinion|editorial|commentary|column|essays|op-?ed)\// },
   { id: 'markets', name: 'Markets', match: /\b(stocks?|bonds?|markets?|s&p|nasdaq|dow|yields?|treasury|forex|crypto|bitcoin|ethereum|oil prices?|commodit|trading|wall street|earnings|ipo)\b/i, urlMatch: /\/(markets|finance|stocks|bonds|trading|investing|crypto)\// },
-  { id: 'tech', name: 'Tech', match: /\b(tech|technolog|\bai\b|artificial intelligence|chatgpt|openai|anthropic|google|microsoft|apple|meta|amazon|nvidia|chips?|software|startups?|silicon valley)\b/i, urlMatch: /\/(tech|technology|\bai\b|gadgets|software|startups)\// },
+  { id: 'tech', name: 'Tech', match: /\b(tech|technolog|ai|artificial intelligence|chatgpt|openai|anthropic|google|microsoft|apple|meta|amazon|nvidia|chips?|software|startups?|silicon valley)\b/i, urlMatch: /\/(tech|technology|ai|gadgets|software|startups)\// },
   { id: 'politics', name: 'Politics', match: /\b(trump|biden|harris|congress|senate|white house|supreme court|election|democrat|republican|gop|capitol|pentagon|filibuster|impeach|primary)\b/i, urlMatch: /\/(politics|elections|government|congress|white-house|us-politics)\// },
   { id: 'world', name: 'World', match: /\b(china|russia|ukraine|israel|gaza|iran|europe|\beu\b|nato|putin|\bxi\b|zelens|netanya|middle east|asia|africa)\b/i, urlMatch: /\/(world|international|asia|europe|africa|middle-east|americas)\// },
   { id: 'business', name: 'Business', match: /\b(ceo|merger|acquisition|earnings|revenue|profit|corporate|company|business|bank|jpmorgan|goldman)\b/i, urlMatch: /\/(business|companies|finance|economy|economics)\// },
@@ -1083,13 +1261,16 @@ function maybeShowDiagnostic() {
   let okTotal = 0, attempts = 0;
   for (const n in PROXY_HEALTH) { okTotal += PROXY_HEALTH[n].ok; attempts += PROXY_HEALTH[n].ok + PROXY_HEALTH[n].fail; }
   const allBlocked = attempts > 0 && okTotal === 0 && state.loadedSources.size === 0;
+  const vpnHint = RATE_LIMIT_HITS >= 2
+    ? '<p><span class="gold">VPN note:</span> relay rate limits were hit this cycle (' + RATE_LIMIT_HITS + '× HTTP 429) — common on shared VPN exits. Rate-limited relays are benched automatically and retried; switching VPN server usually clears it faster.</p>'
+    : '';
   if (state.loadedSources.size === 0 && state.lastUpdate && !state.fromCache) {
     title.textContent = 'All sources failed to load';
     if (allBlocked) {
       const hosts = [...new Set(relayHosts())].slice(0, 4).map(h => '<code>' + escapeHTML(h) + '</code>').join(', ');
-      body.innerHTML = '<p><span class="gold">Likely causes:</span> (1) a privacy extension or ad-blocker is blocking the relay services this page uses to read RSS feeds — disable it for this page, or allowlist ' + hosts + '. (2) A shared VPN exit can exhaust the relays’ per-IP rate limits — switching server (or pausing the VPN) often fixes it. Then press <code>R</code>.</p>';
+      body.innerHTML = '<p><span class="gold">Likely causes:</span> (1) a privacy extension or ad-blocker is blocking the relay services this page uses to read RSS feeds — disable it for this page, or allowlist ' + hosts + '. (2) A shared VPN exit can exhaust the relays’ per-IP rate limits — switching server (or pausing the VPN) often fixes it. Then press <code>R</code>.</p>' + vpnHint;
     } else {
-      body.innerHTML = '<p>Press <code>R</code> to retry. The reader races ' + PROXIES.length + ' relays per feed, preferring whichever is healthiest this session.</p>';
+      body.innerHTML = '<p>Press <code>R</code> to retry. The reader races ' + PROXIES.length + ' relays per feed, preferring whichever is healthiest this session.</p>' + vpnHint;
     }
     banner.classList.add('show'); return;
   }
@@ -1099,26 +1280,29 @@ function maybeShowDiagnostic() {
     banner.classList.add('warn');
     if (truly.length > 0) {
       title.textContent = truly.length + ' source' + (truly.length === 1 ? '' : 's') + ' failed to load';
-      body.innerHTML = '<p>' + escapeHTML(truly.map(id => SOURCE_MAP[id].name).join(', ')) + ' could not be loaded. Auto-retry in ~5 min, or press <code>R</code>.</p>';
+      body.innerHTML = '<p>' + escapeHTML(truly.map(id => SOURCE_MAP[id].name).join(', ')) + ' could not be loaded. Auto-retry in ~' + prefs.refreshMin + ' min, or press <code>R</code>.</p>' + vpnHint;
     } else {
       title.textContent = 'Showing earlier articles for ' + failed + ' source' + (failed === 1 ? '' : 's');
-      body.innerHTML = '<p>' + escapeHTML(Object.keys(state.errors).map(id => SOURCE_MAP[id].name).join(', ')) + ' couldn’t refresh, but earlier articles are still showing.</p>';
+      body.innerHTML = '<p>' + escapeHTML(Object.keys(state.errors).map(id => SOURCE_MAP[id].name).join(', ')) + ' couldn’t refresh, but earlier articles are still showing.</p>' + vpnHint;
     }
     banner.classList.add('show'); return;
   }
-  if (state.loadedSources.size === SOURCES.length) banner.classList.remove('show');
+  if (state.loadedSources.size === activeSources().length) banner.classList.remove('show');
 }
 function showFullDiagnostic() {
   const banner = document.getElementById('notice'), title = document.getElementById('notice-title'), body = document.getElementById('notice-body');
   banner.classList.remove('warn');
   title.textContent = 'Relay diagnostics';
   let h = '<p><span class="gold">Origin:</span> <code>' + escapeHTML(location.protocol === 'file:' ? 'null (file://)' : location.origin) + '</code></p>';
+  const now = Date.now();
   for (const p of PROXIES) {
     const s = PROXY_HEALTH[p.name];
     const wins = Object.values(relayMemory).filter(n => n === p.name).length;
-    h += '<p><span class="gold">' + escapeHTML(p.name) + ':</span> ' + s.ok + ' OK · ' + s.fail + ' fail' + (wins ? ' · <code>preferred for ' + wins + ' host' + (wins === 1 ? '' : 's') + '</code>' : '') + '</p>';
+    const cooling = PROXY_COOLDOWN[p.name] > now ? ' · <code>rate-limited, ' + Math.ceil((PROXY_COOLDOWN[p.name] - now) / 1000) + 's cooldown</code>' : '';
+    const lastErr = s.fail > 0 && PROXY_LAST_ERR[p.name] ? ' · last: <code>' + escapeHTML(PROXY_LAST_ERR[p.name]) + '</code>' : '';
+    h += '<p><span class="gold">' + escapeHTML(p.name) + ':</span> ' + s.ok + ' OK · ' + s.fail + ' fail' + cooling + lastErr + (wins ? ' · <code>preferred for ' + wins + ' host' + (wins === 1 ? '' : 's') + '</code>' : '') + '</p>';
   }
-  h += '<p><span class="gold">Loaded:</span> ' + state.loadedSources.size + ' / ' + SOURCES.length + ' · <span class="gold">Articles:</span> ' + state.articles.length + (state.fromCache ? ' (from cache)' : '') + '</p>';
+  h += '<p><span class="gold">Loaded:</span> ' + state.loadedSources.size + ' / ' + activeSources().length + ' · <span class="gold">Articles:</span> ' + state.articles.length + (state.fromCache ? ' (from cache)' : '') + '</p>';
   if (Object.keys(state.errors).length) h += '<p><span class="gold">Failed:</span></p><p>' + Object.entries(state.errors).map(([id, m]) => '· ' + escapeHTML(SOURCE_MAP[id].name + ': ' + m)).join('<br>') + '</p>';
   body.innerHTML = h;
   banner.classList.add('show');
@@ -1133,7 +1317,7 @@ function sortedArticles() {
   return arr;
 }
 function getFiltered() {
-  let list = sortedArticles();
+  let list = sortedArticles().filter(a => sourceEnabled(a.sourceId));
   if (prefs.activeFilter === 'all' && !state.query) {
     const now = Date.now();
     list = list.filter(a => { const days = (SOURCE_MAP[a.sourceId] && SOURCE_MAP[a.sourceId].freshDays) || 2; return now - a.pubDate.getTime() <= days * 86400 * 1000; });
@@ -1171,7 +1355,7 @@ function groupByTime(list) {
 function updateLiveStatus() {
   const dot = document.querySelector('#live-status .dot'), label = document.getElementById('live-label');
   if (!dot || !label) return;
-  const loaded = state.loadedSources.size, errored = Object.keys(state.errors).length, total = SOURCES.length;
+  const loaded = state.loadedSources.size, errored = Object.keys(state.errors).length, total = activeSources().length;
   const busy = state.refreshing || state.loadingSources.size > 0;
   if (busy && state.fromCache) { dot.className = 'dot cached'; label.textContent = 'CACHED · UPDATING…'; }
   else if (busy) { dot.className = 'dot refreshing'; label.textContent = loaded === 0 ? 'CONNECTING…' : 'LOADING · ' + loaded + ' / ' + total; }
@@ -1183,7 +1367,7 @@ function updateLiveStatus() {
 function updateJustInBadge() {
   const pill = document.getElementById('just-in-pill'), label = document.getElementById('just-in-label');
   const cutoff = Date.now() - 30 * 60 * 1000;
-  const count = state.articles.filter(a => a.pubDate.getTime() >= cutoff).length;
+  const count = state.articles.filter(a => sourceEnabled(a.sourceId) && a.pubDate.getTime() >= cutoff).length;
   if (count > 0) { pill.style.display = 'inline-flex'; label.textContent = count + ' JUST IN'; }
   else pill.style.display = 'none';
 }
@@ -1195,6 +1379,7 @@ const ICON = {
   check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
   copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
   arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
+  share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>',
   track: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M3 12h2M19 12h2M12 3v2M12 19v2"/></svg>',
 };
 function brandMark(src) { return '<span class="chip-mark" style="--cm:' + src.accent + '">' + escapeHTML(src.mark) + '</span>'; }
@@ -1204,12 +1389,13 @@ function secTag(a) { return a.section ? '<span class="sec-tag ' + a.section + '"
 function renderSourceStrip() {
   const strip = document.getElementById('source-strip');
   const counts = getCounts();
-  const total = state.articles.length;
-  const savedCount = state.articles.filter(a => state.saved.has(a.link)).length;
+  const visible = state.articles.filter(a => sourceEnabled(a.sourceId));
+  const total = visible.length;
+  const savedCount = visible.filter(a => state.saved.has(a.link)).length;
   const html = [
     chipHTML({ id: 'all', label: 'All', markChar: '✶', accent: 'var(--accent)', count: total, active: prefs.activeFilter === 'all' }),
     chipHTML({ id: 'saved', label: 'Saved', markChar: '★', accent: 'var(--accent)', count: savedCount, active: prefs.activeFilter === 'saved' }),
-    ...SOURCES.map(s => chipHTML({ id: s.id, label: s.name, markChar: s.mark, accent: s.accent, count: counts[s.id] || 0, active: prefs.activeFilter === s.id, loading: state.loadingSources.has(s.id), error: state.errors[s.id] && !state.staleSources.has(s.id), stale: state.staleSources.has(s.id) })),
+    ...activeSources().map(s => chipHTML({ id: s.id, label: s.name, markChar: s.mark, accent: s.accent, count: counts[s.id] || 0, active: prefs.activeFilter === s.id, loading: state.loadingSources.has(s.id), error: state.errors[s.id] && !state.staleSources.has(s.id), stale: state.staleSources.has(s.id) })),
   ].join('');
   strip.innerHTML = html;
   strip.querySelectorAll('.chip').forEach(el => el.addEventListener('click', () => { prefs.activeFilter = el.dataset.id; persistPrefs(); state.kbIndex = -1; renderAll(); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
@@ -1224,11 +1410,12 @@ function chipHTML({ id, label, markChar, accent, count, active, loading, error, 
 
 function renderTopicStrip() {
   const strip = document.getElementById('topic-strip');
+  const visible = state.articles.filter(a => sourceEnabled(a.sourceId));
   const sectionCounts = {};
-  for (const a of state.articles) if (a.section) sectionCounts[a.section] = (sectionCounts[a.section] || 0) + 1;
+  for (const a of visible) if (a.section) sectionCounts[a.section] = (sectionCounts[a.section] || 0) + 1;
   const order = ['markets', 'business', 'tech', 'politics', 'world'];
   const chips = ['<span class="topic-label">Topic</span>'];
-  chips.push(topicChipHTML('all', 'All', state.articles.length, prefs.activeTopic === 'all'));
+  chips.push(topicChipHTML('all', 'All', visible.length, prefs.activeTopic === 'all'));
   for (const sect of order) if (sectionCounts[sect]) chips.push(topicChipHTML(sect, SECTION_LABELS[sect], sectionCounts[sect], prefs.activeTopic === sect));
   if (sectionCounts.opinion) {
     chips.push(topicChipHTML('opinion', 'Opinion', sectionCounts.opinion, prefs.activeTopic === 'opinion'));
@@ -1254,8 +1441,9 @@ function renderFeed() {
   const feed = document.getElementById('feed');
   const filtered = getFiltered();
   if (state.articles.length === 0 && state.loadingSources.size > 0) {
-    const loaded = SOURCES.length - state.loadingSources.size;
-    feed.innerHTML = '<div class="loading-hint">Reaching ' + SOURCES.length + ' newsrooms · ' + loaded + ' / ' + SOURCES.length + ' in</div>' + skeletonGrid(6);
+    const total = activeSources().length;
+    const loaded = total - state.loadingSources.size;
+    feed.innerHTML = '<div class="loading-hint">Reaching ' + total + ' newsrooms · ' + loaded + ' / ' + total + ' in</div>' + skeletonGrid(6);
     return;
   }
   if (filtered.length === 0) {
@@ -1320,26 +1508,37 @@ function clusterHTML(c, kb) {
 
 function leadHTML(a, kb) {
   const src = SOURCE_MAP[a.sourceId];
-  const cls = ['lead', state.read.has(a.link) && 'read'].filter(Boolean).join(' ');
+  const isRead = state.read.has(a.link);
+  const hasMedia = !!(prefs.showImages && a.image);
+  const isNew = !isRead && a.pubDate.getTime() > state.newSince;
+  const cls = ['lead', isRead && 'read', hasMedia && 'has-media'].filter(Boolean).join(' ');
   return '<a href="' + escapeHTML(a.link) + '" target="_blank" rel="noopener noreferrer" class="' + cls + '" data-open="1" data-link="' + escapeHTML(a.link) + '" data-kb="' + kb + '" style="--lc:' + src.accent + '">'
-    + '<div class="lead-top">' + brandTag(src) + secTag(a) + timeSpan(a.pubDate, 'story-time') + '<span class="readmin" style="margin-left:0">' + a.readMin + ' min read</span></div>'
+    + '<div class="lead-grid"><div class="lead-body">'
+    + '<div class="lead-top">' + (isNew ? '<span class="new-dot" title="New since your last visit"></span>' : '') + brandTag(src) + secTag(a) + timeSpan(a.pubDate, 'story-time') + '<span class="readmin" style="margin-left:0">' + a.readMin + ' min read</span></div>'
     + '<h2 class="lead-title">' + escapeHTML(a.title) + '</h2>'
     + (a.excerpt ? '<p class="lead-excerpt">' + escapeHTML(a.excerpt) + '</p>' : '')
-    + '<span class="lead-cta">Read at ' + escapeHTML(src.name) + ' ' + ICON.arrow + '</span></a>';
+    + '<span class="lead-cta">Read at ' + escapeHTML(src.name) + ' ' + ICON.arrow + '</span></div>'
+    + (hasMedia ? '<div class="lead-media"><img src="' + escapeHTML(a.image) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.style.display=\'none\'"></div>' : '')
+    + '</div></a>';
 }
 
 function storyHTML(a, kb) {
   const src = SOURCE_MAP[a.sourceId];
   const isRead = state.read.has(a.link), isSaved = state.saved.has(a.link);
+  const isNew = !isRead && a.pubDate.getTime() > state.newSince;
   const delay = Math.min((kb - 1) * 14, 220);
   const cls = ['story', isRead && 'read'].filter(Boolean).join(' ');
+  const media = (prefs.showImages && a.image && prefs.density !== 'compact')
+    ? '<div class="story-media"><img src="' + escapeHTML(a.image) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.style.display=\'none\'"></div>' : '';
   return '<a href="' + escapeHTML(a.link) + '" target="_blank" rel="noopener noreferrer" class="' + cls + '" data-open="1" data-link="' + escapeHTML(a.link) + '" data-kb="' + kb + '" style="animation-delay:' + delay + 'ms">'
+    + media
     + '<div class="story-actions">'
     + '<button class="act" data-action="read" data-link="' + escapeHTML(a.link) + '" title="Mark read" aria-label="Mark read">' + ICON.check + '</button>'
+    + '<button class="act" data-action="share" data-link="' + escapeHTML(a.link) + '" title="Share" aria-label="Share">' + ICON.share + '</button>'
     + '<button class="act" data-action="copy" data-link="' + escapeHTML(a.link) + '" title="Copy link" aria-label="Copy link">' + ICON.copy + '</button>'
     + '<button class="act' + (isSaved ? ' saved' : '') + '" data-action="bookmark" data-link="' + escapeHTML(a.link) + '" title="Bookmark" aria-label="Bookmark">' + (isSaved ? ICON.bookmarkFill : ICON.bookmark) + '</button>'
     + '</div>'
-    + '<div class="story-top">' + brandTag(src) + timeSpan(a.pubDate, 'story-time') + '</div>'
+    + '<div class="story-top"><span style="display:inline-flex;align-items:center;gap:8px;min-width:0">' + (isNew ? '<span class="new-dot" title="New since your last visit"></span>' : '') + brandTag(src) + '</span>' + timeSpan(a.pubDate, 'story-time') + '</div>'
     + '<h3 class="story-title">' + escapeHTML(a.title) + '</h3>'
     + (a.excerpt ? '<p class="story-excerpt">' + escapeHTML(a.excerpt) + '</p>' : '')
     + '<div class="story-foot">' + secTag(a) + '<span class="readmin">' + a.readMin + ' min</span></div></a>';
@@ -1358,6 +1557,7 @@ function attachArticleEvents() {
       const action = btn.dataset.action, link = btn.dataset.link;
       if (action === 'bookmark') toggleBookmark(link, btn);
       else if (action === 'copy') copyLink(link);
+      else if (action === 'share') shareArticle(link);
       else if (action === 'read') toggleRead(link, btn);
     });
   });
@@ -1383,6 +1583,15 @@ function toggleRead(link, btn) {
   else { state.read.add(link); if (card) card.classList.add('read'); toast('Marked read'); if (prefs.hideRead) { state.kbIndex = -1; renderFeed(); } }
   persistRead();
 }
+async function shareArticle(link) {
+  const a = state.articles.find(x => x.link === link);
+  if (navigator.share) {
+    try { await navigator.share({ title: a ? a.title : 'Article', url: link }); return; }
+    catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  copyLink(link);
+}
+
 async function copyLink(link) {
   try { await navigator.clipboard.writeText(link); toast('Link copied'); }
   catch {
@@ -1444,6 +1653,7 @@ const searchWrap = document.getElementById('search-wrap');
 const searchBtn = document.getElementById('search-btn');
 const shortcutsModal = document.getElementById('shortcuts-modal');
 const menuModal = document.getElementById('menu-modal');
+const settingsModal = document.getElementById('settings-modal');
 
 document.getElementById('refresh-btn').addEventListener('click', () => loadAll(false));
 function openSearch() { searchWrap.classList.add('open'); setTimeout(() => searchInput.focus(), 100); }
@@ -1478,6 +1688,50 @@ document.getElementById('action-export-bookmarks').addEventListener('click', () 
 document.getElementById('action-clear-bookmarks').addEventListener('click', () => { const n = state.saved.size; if (n === 0) { toast('No bookmarks to clear'); return; } state.saved.clear(); persistSaved(); toast(n + ' bookmarks cleared'); renderAll(); menuModal.classList.remove('open'); });
 document.getElementById('action-show-diag').addEventListener('click', () => { showFullDiagnostic(); menuModal.classList.remove('open'); document.getElementById('notice').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 document.getElementById('just-in-pill').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// ── SETTINGS ──────────────────────────────────────────────────────────────
+function renderSettings() {
+  const wrap = document.getElementById('settings-sources');
+  wrap.innerHTML = SOURCES.map(s =>
+    '<div class="srow"><span class="srow-label" style="display:inline-flex;align-items:center;gap:10px">' + brandMark(s) + escapeHTML(s.name) + '</span>'
+    + '<button class="switch' + (sourceEnabled(s.id) ? ' on' : '') + '" data-source="' + s.id + '" role="switch" aria-checked="' + sourceEnabled(s.id) + '" aria-label="Toggle ' + escapeHTML(s.name) + '"></button></div>'
+  ).join('');
+  wrap.querySelectorAll('.switch').forEach(sw => sw.addEventListener('click', () => {
+    const id = sw.dataset.source;
+    if (sourceEnabled(id)) {
+      if (activeSources().length === 1) { toast('Keep at least one source on'); return; }
+      prefs.disabledSources.push(id);
+      if (prefs.activeFilter === id) prefs.activeFilter = 'all';
+    } else {
+      prefs.disabledSources = prefs.disabledSources.filter(x => x !== id);
+      if (!state.articles.some(a => a.sourceId === id)) loadAll(false);
+    }
+    persistPrefs(); renderSettings(); renderAll();
+  }));
+  const imgSw = document.getElementById('set-images');
+  imgSw.classList.toggle('on', !!prefs.showImages);
+  imgSw.setAttribute('aria-checked', String(!!prefs.showImages));
+  document.querySelectorAll('#refresh-seg button').forEach(b => b.classList.toggle('active', Number(b.dataset.min) === prefs.refreshMin));
+}
+document.getElementById('settings-btn').addEventListener('click', () => { renderSettings(); settingsModal.classList.add('open'); });
+document.getElementById('settings-close').addEventListener('click', () => settingsModal.classList.remove('open'));
+settingsModal.addEventListener('click', e => { if (e.target === settingsModal) settingsModal.classList.remove('open'); });
+document.getElementById('set-images').addEventListener('click', () => { prefs.showImages = !prefs.showImages; persistPrefs(); renderSettings(); renderFeed(); });
+document.getElementById('refresh-seg').addEventListener('click', e => {
+  const b = e.target.closest('button[data-min]'); if (!b) return;
+  prefs.refreshMin = Number(b.dataset.min); persistPrefs(); renderSettings();
+  restartRefreshInterval();
+  toast('Auto-refresh every ' + prefs.refreshMin + ' min');
+});
+
+// ── BACK TO TOP ───────────────────────────────────────────────────────────
+const toTop = document.getElementById('to-top');
+let toTopVisible = false;
+window.addEventListener('scroll', () => {
+  const show = window.scrollY > 900;
+  if (show !== toTopVisible) { toTopVisible = show; toTop.classList.toggle('show', show); }
+}, { passive: true });
+toTop.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); state.kbIndex = -1; applyKbFocus(); });
 
 // ── LIVE PLAYER ───────────────────────────────────────────────────────────
 const livePlayer = document.getElementById('live-player');
@@ -1531,6 +1785,7 @@ document.addEventListener('keydown', e => {
   const inField = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement && document.activeElement.tagName);
   if (e.key === 'Escape') {
     if (shortcutsModal.classList.contains('open')) shortcutsModal.classList.remove('open');
+    else if (settingsModal.classList.contains('open')) settingsModal.classList.remove('open');
     else if (menuModal.classList.contains('open')) menuModal.classList.remove('open');
     else if (inField) document.activeElement.blur();
     else if (state.kbIndex >= 0) { state.kbIndex = -1; applyKbFocus(); }
@@ -1560,12 +1815,14 @@ document.addEventListener('keydown', e => {
 
 // ── REFRESH CYCLES ──────────────────────────────────────────────────────────
 let refreshInterval = null;
-function startRefreshInterval() { if (refreshInterval) return; refreshInterval = setInterval(() => { loadAll(false); fetchTape(); }, REFRESH_MS); }
+function refreshMs() { return Math.max(2, Number(prefs.refreshMin) || 5) * 60 * 1000; }
+function startRefreshInterval() { if (refreshInterval) return; refreshInterval = setInterval(() => { loadAll(false); fetchTape(); }, refreshMs()); }
 function stopRefreshInterval() { if (refreshInterval) { clearInterval(refreshInterval); refreshInterval = null; } }
+function restartRefreshInterval() { stopRefreshInterval(); startRefreshInterval(); }
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) stopRefreshInterval();
   else {
-    if (state.lastUpdate && Date.now() - state.lastUpdate.getTime() > REFRESH_MS) loadAll(false);
+    if (state.lastUpdate && Date.now() - state.lastUpdate.getTime() > refreshMs()) loadAll(false);
     if (Date.now() - state.tapeAt > 10 * 60 * 1000) fetchTape();
     startRefreshInterval(); updateLiveStatus();
   }
